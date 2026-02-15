@@ -84,3 +84,16 @@ XPWeekend.JoyousJourneysRepRate = 1.10
 #     Default: 1 (Enabled)
 
 XPWeekend.ExcludeInsaneReps = 1
+
+# XPWeekend.AuraEnabled = 1
+#     Display a visible aura buff while weekend XP is active and the player is eligible.
+#     Default: 1 (Enabled)
+#
+XPWeekend.AuraEnabled = 1
+
+# XPWeekend.AuraSpellId = 70871
+#     Aura spell to apply while weekend XP is active.
+#     Default: 70871 (Luck of the Draw, visible buff icon)
+#     Note: This must be a valid spell ID in the 3.3.5a client.
+#
+XPWeekend.AuraSpellId = 70871

@@ -89,6 +89,8 @@ public:
                 handler->PSendSysMessage("This server is running the |cff4CFF00Double XP Weekend |rmodule.");
             }
         }
+
+        SyncWeekendAura(player);
     }
 
     bool HandleSetXPBonusCommand(ChatHandler* handler, float rate) const
@@ -147,6 +149,49 @@ public:
     float ConfigJoyousJourneysRepRate() const { return sConfigMgr->GetOption<float>("XPWeekend.JoyousJourneysRepRate", 1.10f); }
     bool ExcludeInsaneReps() const { return sConfigMgr->GetOption<bool>("XPWeekend.ExcludeInsaneReps", true); }
     float ConfigMaxAllowedRate() const { return sConfigMgr->GetOption<float>("XPWeekend.MaxAllowedRate", 2.0f); }
+    bool ConfigAuraEnabled() const { return sConfigMgr->GetOption<bool>("XPWeekend.AuraEnabled", true); }
+    uint32 ConfigAuraSpellId() const { return sConfigMgr->GetOption<uint32>("XPWeekend.AuraSpellId", 70871); } // Luck of the Draw
+
+    void SyncWeekendAura(Player* player) const
+    {
+        uint32 auraSpellId = ConfigAuraSpellId();
+        if (auraSpellId == 0)
+        {
+            return;
+        }
+
+        // If aura display is disabled in config, make sure an old aura is removed.
+        if (!ConfigAuraEnabled())
+        {
+            if (player->HasAura(auraSpellId))
+            {
+                player->RemoveAura(auraSpellId);
+            }
+            return;
+        }
+
+        bool shouldHaveAura = IsEventActive();
+        if (ConfigIsDKStartZoneRequired() && player->getClass() == CLASS_DEATH_KNIGHT && !IsDKStartZoneComplete(player))
+        {
+            shouldHaveAura = false;
+        }
+        if (player->GetLevel() >= ConfigMaxLevel())
+        {
+            shouldHaveAura = false;
+        }
+
+        if (shouldHaveAura)
+        {
+            if (!player->HasAura(auraSpellId))
+            {
+                player->AddAura(auraSpellId, player);
+            }
+        }
+        else if (player->HasAura(auraSpellId))
+        {
+            player->RemoveAura(auraSpellId);
+        }
+    }
 
 private:
 
@@ -345,6 +390,7 @@ public:
     void OnPlayerGiveXP(Player* player, uint32& amount, Unit* /*victim*/, uint8 xpSource) override
     {
         DoubleXpWeekend* mod = DoubleXpWeekend::instance();
+        mod->SyncWeekendAura(player);
         amount = mod->OnPlayerGiveXP(player, amount, xpSource);
     }
 
