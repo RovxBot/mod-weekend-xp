@@ -1,0 +1,7 @@
+## Interface: 30300
+## Title: Weekend Bonus
+## Notes: Displays the active server weekend bonus and its exact percentage.
+## Author: mod-weekend-xp contributors
+## Version: 2.0.0
+
+WeekendBonus.lua
