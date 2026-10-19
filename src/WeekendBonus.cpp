@@ -240,7 +240,7 @@ namespace WeekendBonus
             }
             SpellEntry cosmetic = *original;
             cosmetic.DurationIndex = 21;
-            cosmetic.Effect[EFFECT_0] = SPELL_EFFECT_NONE;
+            cosmetic.Effect[EFFECT_0] = 0; // AzerothCore uses 0 for no effect.
             cosmetic.EffectApplyAuraName[EFFECT_0] = SPELL_AURA_NONE;
             cosmetic.Effect[EFFECT_2] = SPELL_EFFECT_APPLY_AURA;
             cosmetic.EffectApplyAuraName[EFFECT_2] = SPELL_AURA_DUMMY;
